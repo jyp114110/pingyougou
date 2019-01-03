@@ -10,8 +10,9 @@
         <el-input v-model="ruleForm.username"></el-input>
       </el-form-item>
       <el-form-item label="密码"
-                    prop="password">
-        <el-input v-model="ruleForm.password"></el-input>
+                    prop="password"
+                   >
+        <el-input v-model="ruleForm.password"  type="password"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary"
@@ -29,7 +30,7 @@ export default {
   data () {
     return {
       ruleForm: {
-        name: 'admin',
+        username: 'admin',
         password: '123456'
 
       },
@@ -53,8 +54,16 @@ export default {
         axios
           .post('http://localhost:8888/api/private/v1/login', this.ruleForm)
           .then(res => {
+            console.log(res)
+
             if (res.data.meta.status === 200) {
-              console.log(1)
+              localStorage.setItem('token', res.data.data.token)
+              this.$router.push({name: 'home'})
+            } else {
+              this.$message({
+                message: res.data.meta.msg,
+                type: 'warning'
+              })
             }
           })
       })

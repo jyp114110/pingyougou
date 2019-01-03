@@ -19,11 +19,18 @@ const router = new VueRouter({
 })
 // // 5. 设置 导航守卫
 
-// router.beforeEach((to, from, next) => {
-//   if (to.path === '/login') {
-//     next()
-//     return false
-//   }
-// })
+router.beforeEach((to, from, next) => {
+  if (to.path === '/login') {
+    next()
+    return false
+  }
+  // 判断是否登录过，登录过 放行，没有回到登录页
+  const token = localStorage.getItem('token')
+  if (token) {
+    next()
+  } else {
+    next('/login')
+  }
+})
 // 6. 导出路由
 export default router
