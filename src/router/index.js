@@ -6,6 +6,7 @@ import VueRouter from 'vue-router'
 // // 2. 导入 需要 成为路由的 组件
 import Home from '@/components/home/Home'
 import Login from '@/components/login/Login'
+import Users from '@/components/users/Users'
 
 // // 3.安装路由插件
 Vue.use(VueRouter)
@@ -14,7 +15,13 @@ Vue.use(VueRouter)
 const router = new VueRouter({
   routes: [
     { path: '/login', name: 'login', component: Login },
-    { path: '/home', name: 'home', component: Home }
+    { path: '/home',
+      name: 'home',
+      component: Home,
+      children: [
+        {path: '/users', component: Users}
+      ]
+    }
   ]
 })
 // // 5. 设置 导航守卫

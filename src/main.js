@@ -9,6 +9,23 @@ import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
+// 引入 index.css
+import '@/assets/css/index.css'
+
+//  优化 axios
+import axios from 'axios'
+
+// 1. 将 axios 添加到 vue 原型上 这样全局都能使用
+Vue.prototype.$http = axios
+// 2. 设置基准路由
+axios.defaults.baseURL = 'http://localhost:8888/api/private/v1/'
+
+// 3 利用请求拦截器，同一添加 token
+axios.interceptors.request.use(config => {
+  config.headers.Authorization = localStorage.getItem('token')
+  return config
+})
+
 // 安装 elementUI
 Vue.use(ElementUI)
 
