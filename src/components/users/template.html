@@ -1,10 +1,9 @@
 <div class="users">
   <!-- 面包屑导航 -->
   <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
-    <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-    <el-breadcrumb-item>活动管理</el-breadcrumb-item>
-    <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-    <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+    <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+    <el-breadcrumb-item>用户管理</el-breadcrumb-item>
+    <el-breadcrumb-item>用户列表</el-breadcrumb-item>
   </el-breadcrumb>
   <!-- 搜索区域 -->
   <el-row :gutter="20">
@@ -30,6 +29,7 @@
     <el-table-column prop="email" label="邮箱" width="180"></el-table-column>
     v-model="scope.row.mg_state" <el-table-column prop="mobile" label="电话" width="180"> </el-table-column>
     <el-table-column label="用户状态">
+      <!-- 字节点在组件中不显示 需要利用 slot插槽 显示在页面中 -->
       <template slot-scope="scope">
         <el-switch v-model="scope.row.mg_state" @change="changeUserStatus(scope.row)">
         </el-switch>
@@ -41,8 +41,12 @@
       <template slot-scope="scope">
         <el-button type="primary" icon="el-icon-edit" size="mini" plain @click="showUserEditDialog(scope.row.id)"></el-button>
         <el-button type="danger" icon="el-icon-delete" size="mini" plain @click="deleteUserById(scope.row.id)"></el-button>
-        <el-button type="success" size="mini" icon="el-icon-check" plain>
-
+        <el-button
+          type="success"
+          size="mini"
+          icon="el-icon-check"
+          plain
+          @click="showAssignRolesDialog(scope.row)">
           分配角色
         </el-button>
       </template>
@@ -97,6 +101,29 @@
   <div slot="footer" class="dialog-footer">
     <el-button @click="isShowEditUserDialog= false">取 消</el-button>
     <el-button type="primary" @click="editUser">确 定</el-button>
+  </div>
+</el-dialog>
+
+<!-- 分配用户角色对话框 -->
+<el-dialog title="分配角色" :visible.sync="isShowAssignRolesDialog">
+  <el-form :model="assignRolesForm" label-width="120px">
+    <el-form-item label="用户名">
+     <el-tag type="info">{{assignRolesForm.username}}</el-tag>
+    </el-form-item>
+    <el-form-item label="角色列表">
+      <el-select v-model="assignRolesForm.roleId" placeholder="请选择用户角色">
+        <el-option
+          v-for="role in rolesList"
+          :key="role.id"
+          :label="role.roleName"
+          :value="role.id">
+      </el-option>
+      </el-select>
+    </el-form-item>
+  </el-form>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="isShowAssignRolesDialog= false">取 消</el-button>
+    <el-button type="primary" @click="assignRoles">确 定</el-button>
   </div>
 </el-dialog>
 

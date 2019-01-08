@@ -1,0 +1,94 @@
+<div class="roles">
+
+    <!-- 面包屑导航 -->
+    <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
+      <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item>权限管理</el-breadcrumb-item>
+      <el-breadcrumb-item>角色列表</el-breadcrumb-item>
+    </el-breadcrumb>
+
+    <el-table :data="rolesData" stripe style="width: 100%">
+
+      <!-- 隐藏表单 -->
+      <el-table-column type="expand">
+        <template slot-scope="scope">
+          <el-form label-position="left">
+            <!-- 一级权限 -->
+            <el-row class="level1" v-for="level1 in scope.row.children" :key="level1.id">
+              <el-col :span="4">
+                <el-tag
+                  closable
+                  type="info"
+                  @close="deletePowers(scope.row.id,level1.id)">
+                  {{level1.authName}}
+                </el-tag>
+                <i class="el-icon-arrow-right"></i>
+              </el-col>
+
+              <el-col :span="20">
+                <!-- 二级权限 -->
+                <el-row class="level2" v-for="level2 in level1.children" :key="level2.id">
+                  <el-col :span="4">
+                    <el-tag
+                      closable
+                      type="success"
+                      @close="deletePowers(scope.row.id,level2.id)">
+                      {{level2.authName}}
+                    </el-tag>
+                    <i class="el-icon-arrow-right"></i>
+                  </el-col>
+                  <el-col :span="20" >
+                    <el-tag
+                      closable type="warning"
+                      class="level3"
+                      v-for="level3 in level2.children"
+                      :key="level3.id"
+                      @close="deletePowers(scope.row.id,level3.id)" >
+                      {{level3.authName}}
+                   </el-tag>
+                  </el-col>
+
+                </el-row>
+              </el-col>
+
+            </el-row>
+          </el-form>
+        </template>
+      </el-table-column>
+
+      <!-- 索引 -->
+      <el-table-column type="index"></el-table-column>
+      <el-table-column prop="roleName" label="角色名称" width="180">
+      </el-table-column>
+      <el-table-column prop="roleDesc" label="描述" width="180">
+      </el-table-column>
+      <el-table-column  label="操作">
+        <template slot-scope="scope">
+          <el-button type="primary" icon="el-icon-edit" size="mini" plain @click="showUserEditDialog(scope.row.id)"></el-button>
+          <el-button type="danger" icon="el-icon-delete" size="mini" plain @click="deleteUserById(scope.row.id)"></el-button>
+          <el-button type="success" size="mini" icon="el-icon-check" plain
+          @click="showAssignPowersDialog(scope.row)">
+            分配权限
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+<!-- 分配权限对话框 -->
+<el-dialog title="角色授权" :visible.sync="isShowAssignPowersDialog">
+  <!-- 树形控件 -->
+  <!--
+    : props="defaultProps" 可以修改默认的 label 或 children 属性
+        defaultProps: {
+        children 属性用来指定使用数据中的哪个属性来作为当前节点的子节点
+        children: 'children', // 指定子树为节点对象的某个属性值
+      }
+   -->
+  <el-tree :data="powersTree" show-checkbox node-key="id" :default-expand-all="true" :props="defaultProps" ref="tree">
+  </el-tree>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="isShowAssignPowersDialog=false">取 消</el-button>
+    <el-button type="primary" @click="assignPowers">确 定</el-button>
+  </div>
+</el-dialog>
+
+</div>

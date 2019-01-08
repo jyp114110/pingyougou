@@ -15,6 +15,10 @@ import '@/assets/css/index.css'
 //  优化 axios
 import axios from 'axios'
 
+// 引入 element-tree 组件
+import ElTreeGrid from 'element-tree-grid'
+Vue.component(ElTreeGrid.name, ElTreeGrid)
+
 // 1. 将 axios 添加到 vue 原型上 这样全局都能使用
 Vue.prototype.$http = axios
 // 2. 设置基准路由
@@ -38,4 +42,5 @@ new Vue({
   router,
   components: { App },
   template: '<App/>'
+
 })

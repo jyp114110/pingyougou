@@ -77,11 +77,24 @@ export default {
           }
         ]
 
-      }
+      },
+
+      // 分配用户角色
+      isShowAssignRolesDialog: false,
+      assignRolesForm: {
+        username: '',
+        roleId: -1,
+        // 暂存userId
+        userId: -1
+
+      },
+      rolesList: []
     }
   },
   created () {
-    this.getUserList()
+    this.getUserList(this.pagenum, this.searchText)
+
+    this.getRolesList()
   },
   methods: {
     getUserList (pagenum = 1, query = '') {
@@ -94,8 +107,6 @@ export default {
 
           }
         }).then(res => {
-          console.log(res)
-
           if (res.data.meta.status === 200) { // 数据获取成功
             //  设置 userList
             this.userList = res.data.data.users
@@ -112,7 +123,6 @@ export default {
     },
 
     changePage (curPage) {
-      // console.log(curPage)
       this.getUserList(curPage, this.searchText)
     },
     changeUserStatus (user) {
@@ -135,7 +145,6 @@ export default {
         })
     },
     searchUser () {
-      // console.log('searchUser', this.searchText)
       this.getUserList(1, this.searchText)
     },
     // 添加用户
@@ -160,7 +169,6 @@ export default {
     },
 
     async deleteUserById (id) {
-      // console.log(id)
       try {
         await this.$confirm('您确定要删除此用户?', '提示', {
           confirmButtonText: '确定',
@@ -173,7 +181,7 @@ export default {
             type: 'success',
             message: res.data.meta.msg
           })
-          this.getUserList()
+          this.getUserList(1, this.searchText)
         } else {
           this.$message({
             type: 'warning',
@@ -191,9 +199,9 @@ export default {
     // 编辑用户
     async showUserEditDialog (id) {
       this.isShowEditUserDialog = true
-      // console.log(id)
+
       const res = await this.$http(`/users/${id}`)
-      // console.log(res)
+
       if (res.data.meta.status === 200) {
         this.editUserForm.username = res.data.data.username
         this.editUserForm.mobile = res.data.data.mobile
@@ -210,7 +218,7 @@ export default {
       const id = this.editUserForm.id
       const email = this.editUserForm.email
       const mobile = this.editUserForm.mobile
-      // console.log('editUser')
+
       await this.$refs.editUserFormRef.validate()
       const res = await this.$http.put(`/users/${id}`, {
         email,
@@ -233,7 +241,43 @@ export default {
     },
     closeEditUserDialog () {
       this.$refs.editUserFormRef.resetFields()
+    },
+
+    // 分配用户角色对话框显示
+    showAssignRolesDialog (curRole) {
+      this.isShowAssignRolesDialog = true
+      const role = this.rolesList.find(item => item.roleName === curRole.role_name)
+      // console.log(role)
+      this.assignRolesForm.roleId = role ? role.id : ''
+
+      this.assignRolesForm.username = curRole.username
+      this.assignRolesForm.userId = curRole.id
+    },
+
+    // 获取所有角色
+    async getRolesList () {
+      const res = await this.$http.get('/roles')
+      // console.log(res)
+      this.rolesList = res.data.data
+    },
+    async assignRoles () {
+      // console.log('assignRoles')
+      const { userId, roleId: rid } = this.assignRolesForm
+      // console.log(userId, rid)
+      const res = await this.$http.put(`users/${userId}/role`, {
+        rid
+      })
+      // console.log(res)
+      if (res.data.meta.status === 200) {
+        this.isShowAssignRolesDialog = false
+        this.$message({
+          type: 'success',
+          message: res.data.meta.msg
+        })
+        this.getUserList(this.pagenum, this.searchText)
+      }
     }
+
   }
 
 }

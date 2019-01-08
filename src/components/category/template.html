@@ -1,0 +1,41 @@
+<div class="category">
+
+  <!--
+    label ：设置列名称
+    prop ：提供列内容的属性名
+
+    tree-key ：区分其他菜单，不添加该key会导致所有菜单同时展开，添加该key只展开该菜单
+    level-key ：设置菜单级别，以缩进形式表示子菜单
+    parent-key ：父级菜单id，不添加该key，则无法收起子菜单
+    child-key ：指定使用哪个属性名称表示子菜单，默认值为：children
+  -->
+  <el-table
+    :data="cateList"
+    stripe style="width: 100%"
+    v-loading="loading">
+
+    <el-table-tree-column prop="cat_name" label="分类名称" width="220" tree-key="cat_id" level-key="cat_level" parent-key="cat_pid"
+      :indent-size="30"></el-table-tree-column>
+
+    <el-table-column label="是否有效"   width="180">
+      <template slot-scope="scope">
+        <span>{{scope.row.cat_deleted ? '否' : '是'}}</span>
+      </template>
+    </el-table-column>
+
+    <el-table-column label="操作">
+      <template slot-scope="scope">
+        <el-button type="primary" icon="el-icon-edit" size="mini" plain></el-button>
+        <el-button type="danger" icon="el-icon-delete" size="mini" plain></el-button>
+      </template>
+
+    </el-table-column>
+
+  </el-table>
+
+  <!-- 分页 -->
+    <el-pagination background layout="prev, pager, next" :total="total" :page-size="pagesize" :current-page="pagenum"
+      @current-change="changePage">
+    </el-pagination>
+
+</div>
