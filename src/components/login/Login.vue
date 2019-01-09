@@ -60,7 +60,7 @@ export default {
         this.$http
           .post('/login', this.ruleForm)
           .then(res => {
-            console.log(res)
+            // console.log(res)
 
             if (res.data.meta.status === 200) {
               localStorage.setItem('token', res.data.data.token)

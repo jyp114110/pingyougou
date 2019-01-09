@@ -9,7 +9,9 @@ import Login from '@/components/login/Login'
 import Users from '@/components/users/Users'
 import Roles from '@/components/roles/Roles'
 import Rights from '@/components/rights/Rights'
-import Category from '@/components/category/category'
+import Category from '@/components/category/Category'
+import Goods from '@/components/goods/Goods'
+import GoodsAdd from '@/components/goods-add/GoodsAdd'
 
 // // 3.安装路由插件
 Vue.use(VueRouter)
@@ -25,7 +27,12 @@ const router = new VueRouter({
         {path: '/users', component: Users},
         {path: '/roles', component: Roles},
         { path: '/rights', component: Rights },
-        {path: '/categories', component: Category}
+        {path: '/categories', component: Category},
+        /*
+          '/goods/:pagenum?' 路由模糊匹配
+        */
+        {path: '/goods/:pagenum?', component: Goods},
+        { path: '/goods-add', component: GoodsAdd }
       ]
     }
   ]

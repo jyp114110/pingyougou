@@ -1,0 +1,76 @@
+<div class="goods-add">
+  <!-- 步骤条 -->
+  <el-steps :active="Stepsactive" finish-status="success">
+    <el-step title="步骤 1" description="基本信息"></el-step>
+    <el-step title="步骤 2" description="商品图片"></el-step></el-step>
+    <el-step title="步骤 3" description="商品内容"></el-step></el-step>
+  </el-steps>
+
+  <!-- tabs 标签页 -->
+  <el-tabs
+    v-model="tabActive"
+    tabPosition="left"
+    @tab-click="tabChange">
+    <!-- 基本信息 -->
+    <el-tab-pane label="基本信息" name="info">
+      <el-form ref="infoForm" :model="infoForm" label-width="80px">
+        <el-form-item label="商品名称">
+          <el-input v-model="infoForm.goods_name"></el-input>
+        </el-form-item>
+        <el-form-item label="商品价格">
+          <el-input v-model="infoForm.goods_price"></el-input>
+        </el-form-item>
+        <el-form-item label="商品重量">
+          <el-input v-model="infoForm.goods_weight"></el-input>
+        </el-form-item>
+        <el-form-item label="商品数量">
+          <el-input v-model="infoForm.goods_number"></el-input>
+        </el-form-item>
+        <el-form-item label="商品分类">
+          <el-cascader
+            :options="categoryList"
+            :props="{
+              label: 'cat_name',
+              value: 'cat_id'
+            }"
+            v-model="infoForm.goods_cat"
+            change-on-select>
+          </el-cascader>
+        </el-form-item>
+        <el-form-item label="是否促销">
+          <el-radio v-model="infoForm.radio" :label="true">是</el-radio>
+          <el-radio v-model="infoForm.radio" :label="false">否</el-radio>
+        </el-form-item>
+      </el-form>
+      <el-button @click="nextSteps(1,'pic')" type="primary">下一步</el-button>
+    </el-tab-pane>
+
+    <!-- 商品图片 -->
+    <!--
+      action 上传地址
+      on-preview 图片预览
+      on-remove 图片移除
+      limit 最大限制数
+
+     -->
+    <el-tab-pane label="商品图片" name="pic">
+      <el-upload
+        action="http://localhost:8888/api/private/v1/upload"
+        :headers="headers"
+        :on-remove="handleRemove"
+        multiple
+        list-type="picture-card"
+        :on-success="uploadSuccess">
+        <el-button size="small" type="primary">点击上传</el-button>
+        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+    </el-upload>
+        <el-button @click="nextSteps(2,'content')" type="primary">下一步</el-button>
+    </el-tab-pane>
+    <el-tab-pane label="商品内容" name="content">
+      <quill-editor v-model="infoForm.goods_introduce"> </quill-editor>
+      <el-button type="primary" @click="addGoods">确定</el-button>
+    </el-tab-pane>
+  </el-tabs>
+
+  <!-- <el-button type="primary" @click="nextSteps">下一步</el-button> -->
+</div>
