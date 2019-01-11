@@ -31,11 +31,24 @@ module.exports = {
       ? config.build.assetsPublicPath
       : config.dev.assetsPublicPath
   },
+  externals: {
+
+    // 键：表示 导入包语法 from 后面跟着的名称
+    // 值：表示 script 引入JS文件时，在全局环境中的变量名称
+    //  window.Vue / window.axios / window.VueRouter
+    vue: 'Vue',
+    axios: 'axios',
+    'vue-router': 'VueRouter',
+    // 注意：带有样式文件的第三方包，需要在 代码中 将样式注释掉！！！
+    'element-ui': 'ELEMENT',
+    'element-tree-grid': 'ElTableTreeColumn',
+    'vue-quill-editor': 'VueQuillEditor'
+  },
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
-      '@': resolve('src'),
+      '@': resolve('src')
     }
   },
   module: {

@@ -86,6 +86,9 @@ export default {
         })
         this.isShowAddCateDialog = false
         this.getCateList()
+        console.log(this.$refs.form1)
+
+        this.$refs.form1.resetFields()
       }
     }
   }

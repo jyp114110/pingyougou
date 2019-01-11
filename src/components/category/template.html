@@ -40,7 +40,7 @@
 
  <!-- 添加分类对话框  -->
 <el-dialog title="添加分类" :visible.sync="isShowAddCateDialog">
-  <el-form :model="addCateForm" label-width="120px">
+  <el-form :model="addCateForm" label-width="120px" ref="form1">
     <el-form-item label="分类名称">
       <el-input v-model="addCateForm.cat_name" autocomplete="off"></el-input>
     </el-form-item>
